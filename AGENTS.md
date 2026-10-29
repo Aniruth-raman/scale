@@ -40,6 +40,10 @@ store data locally, and never contact AILink or another cloud service.
 8. **No personal data in fixtures.** Use synthetic values (e.g. 70.00 kg) and
    redacted device identifiers. Never commit a real measurement, MAC address,
    name or account data.
+9. **Release signing.** Release builds are signed with the private key
+   referenced by `android/key.properties`. Never commit that file, the keystore
+   or its password, and never fall back to the debug key for a release: an app
+   signed with a different key can never be updated.
 
 ## Architecture boundaries
 

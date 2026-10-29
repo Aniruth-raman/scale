@@ -101,6 +101,11 @@ flutter build apk --debug
 flutter build apk --release
 ```
 
+Release builds are signed with a private key kept outside the repository.
+`android/key.properties` points at it (template: `android/key.properties.example`)
+and `docs/build-and-test.md` §11 covers the setup. Without that file the release
+build fails instead of quietly signing with the debug key.
+
 Builds are not committed. The release artifacts from the verified run are in
 the local `dist/` directory, signed with the Flutter debug key and for testing
 only; they still carry the old `dev.ailinkreplacement.ailink_scale` id (see

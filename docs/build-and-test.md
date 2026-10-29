@@ -256,6 +256,8 @@ Actual results:
 - Release APK: `build/app/outputs/flutter-apk/app-release.apk`, 54,933,996
   bytes, SHA-256
   `78237E032B4925A4A1D50182C9FF7F86D67E7ED1752CA12B4B9250FA8928994D`.
+  That build still used the debug key and has since been replaced by the
+  private-key build described in §11.
 - `aapt2 dump badging`: `package: com.aniruth.scale`,
   `application-label: 'Scale'`,
   `launchable-activity: com.aniruth.scale.MainActivity`.
@@ -300,6 +302,62 @@ mipmaps (`ic_launcher.png`), the adaptive foreground (`ic_launcher_foreground.pn
 and every iOS `AppIcon` size. The adaptive background is a vector drawable,
 `android/app/src/main/res/drawable/ic_launcher_background.xml`; keep its gradient
 in sync with the script by hand.
+
+## 11. Signing and releases
+
+Release builds are signed with a private key that is not in the repository.
+
+| Item | Value |
+|---|---|
+| Keystore | `%USERPROFILE%\keys\scale-upload.jks` (outside the repo) |
+| Alias | `upload` |
+| Key | RSA 4096, PKCS12, 10,000 days |
+| Subject | `CN=Aniruth Raman, O=Scale` |
+| Certificate SHA-256 | `735D40C24A8282B309E51E2F24EAD51AF193B832F5EF400D38779C18FCECEF87` |
+| Secrets file | `android/key.properties`, git-ignored; template `android/key.properties.example` |
+
+`android/app/build.gradle.kts` reads `key.properties` for the `release` signing
+config. When the file is absent the release build fails; it does not fall back
+to the debug key, because an app published with a different key can never be
+updated.
+
+```powershell
+flutter build apk --release
+apksigner verify --print-certs build/app/outputs/flutter-apk/app-release.apk
+```
+
+Actual output:
+
+```text
+V2 Signer: certificate DN: CN=Aniruth Raman, O=Scale
+V2 Signer: certificate SHA-256 digest: 735d40c24a8282b309e51e2f24ead51af193b832f5ef400d38779c18fcecef87
+```
+
+Installing that build over the debug-signed install fails, as it must:
+
+```text
+INSTALL_FAILED_UPDATE_INCOMPATIBLE: Existing package com.aniruth.scale signatures do not match newer version
+```
+
+So the debug-signed install has to be uninstalled once (which deletes its local
+database) before a release-key build can be installed. Every later release
+signed with the same key installs as a normal update.
+
+Release steps:
+
+1. Bump `version` in `pubspec.yaml` (`1.0.0+1` → `1.0.1+2`). Android refuses a
+   `versionCode` that is not higher than the installed one.
+2. `flutter build apk --release`
+3. Name the asset and publish it:
+
+```powershell
+Copy-Item build\app\outputs\flutter-apk\app-release.apk Scale-1.0.1.apk
+gh release create v1.0.1 Scale-1.0.1.apk --title "Scale 1.0.1" --notes "…"
+```
+
+Back up the keystore and its password (the password is in
+`%USERPROFILE%\keys\scale-signing-credentials.txt`). Losing both means the app
+can only continue under a new application id.
 
 
 

@@ -1,0 +1,7 @@
+# Copy to key.properties and fill in. key.properties is git-ignored.
+# Keep the keystore itself outside this repository and back it up: it is the
+# only key that can sign an update of com.aniruth.scale.
+storeFile=C:/path/outside/the/repo/scale-upload.jks
+storePassword=your-store-password
+keyPassword=your-key-password
+keyAlias=upload

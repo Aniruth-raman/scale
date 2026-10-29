@@ -149,9 +149,11 @@ contains `INTERNET` for Flutter tooling.
   is reverse-engineered and not vendor-confirmed.
 - Sharing a CSV exports the measurement data to the chosen app. The user
   controls that action.
-- The release APK in `dist/` is signed with the Flutter debug key (the template
-  configuration). It is for testing, not distribution. A production release
-  needs a private signing key and a reviewed build.
+- Release builds are signed with a private key kept outside the repository;
+  see `docs/build-and-test.md` §11. The debug-signed APKs left in `dist/`
+  predate that and cannot be updated by it. Only the template
+  `android/key.properties.example` is committed; the keystore, the real
+  `key.properties` and its password are not.
 - Dependencies and their transitive manifests must be re-checked after every
   upgrade. The merged manifest is the source of truth.
 

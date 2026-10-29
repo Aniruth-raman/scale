@@ -77,3 +77,8 @@ app.*.map.json
 /android/.gradle/
 /android/.kotlin/
 
+# Signing secrets: the keystore lives outside the repo, only the template is tracked
+*.jks
+*.keystore
+key.properties
+
