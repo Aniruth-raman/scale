@@ -359,6 +359,55 @@ Back up the keystore and its password (the password is in
 `%USERPROFILE%\keys\scale-signing-credentials.txt`). Losing both means the app
 can only continue under a new application id.
 
+### Setting up a key from scratch
+
+Only needed on a new machine, or if you deliberately start a new application id.
+The commands are exactly what produced the key above.
+
+1. Create the key outside the repository, with a generated password:
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\keys" | Out-Null
+& "$env:JAVA_HOME\bin\keytool.exe" -genkeypair -v `
+  -keystore "$env:USERPROFILE\keys\scale-upload.jks" `
+  -storetype PKCS12 -keyalg RSA -keysize 4096 -validity 10000 `
+  -alias upload `
+  -storepass "<password>" -keypass "<password>" `
+  -dname "CN=<your name>, O=Scale" -noprompt
+```
+
+PKCS12 requires the same store and key password. Store the password in a
+password manager before continuing.
+
+2. Create `android/key.properties` (git-ignored; use forward slashes):
+
+```properties
+storeFile=C:/Users/<you>/keys/scale-upload.jks
+storePassword=<password>
+keyPassword=<password>
+keyAlias=upload
+```
+
+3. `android/app/build.gradle.kts` already contains the wiring; the parts that
+matter are `import java.util.Properties`, loading `rootProject.file("key.properties")`,
+a `signingConfigs.create("release")` block that fills in only when that file
+exists, and `buildTypes.release { signingConfig = signingConfigs.getByName("release") }`.
+
+4. Build and check the certificate:
+
+```powershell
+flutter build apk --release
+apksigner verify --print-certs build/app/outputs/flutter-apk/app-release.apk
+```
+
+5. Confirm that the new key cannot install over a debug-signed build (see the
+`INSTALL_FAILED_UPDATE_INCOMPATIBLE` output above). That failure is the proof
+that the key is doing its job.
+
+Restore instead of regenerate: copy the backed-up `.jks` back and recreate
+`key.properties`. Generating a second key for the same application id would
+strand every existing install.
+
 
 
 
