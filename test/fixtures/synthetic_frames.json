@@ -1,0 +1,174 @@
+{
+  "note": "Synthetic AILink frames. No real measurements or personal data.",
+  "frames": [
+    {
+      "name": "weight_scale_live_70_00_kg",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "01 00 1b 58 20",
+      "frame_hex": "a7 00 56 05 01 00 1b 58 20 ef 7a",
+      "expected": {
+        "type": "reading",
+        "value": 70.0,
+        "unit": "kg",
+        "decimals": 2,
+        "stable": false
+      }
+    },
+    {
+      "name": "weight_scale_stable_70_00_kg",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "02 00 1b 58 20",
+      "frame_hex": "a7 00 56 05 02 00 1b 58 20 f0 7a",
+      "expected": {
+        "type": "reading",
+        "value": 70.0,
+        "unit": "kg",
+        "decimals": 2,
+        "stable": true
+      }
+    },
+    {
+      "name": "weight_scale_complete",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "0a",
+      "frame_hex": "a7 00 56 01 0a 61 7a",
+      "expected": {
+        "type": "completion",
+        "requires_stable": true
+      }
+    },
+    {
+      "name": "weight_scale_jin_140_0",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "02 00 05 78 11",
+      "frame_hex": "a7 00 56 05 02 00 05 78 11 eb 7a",
+      "expected": {
+        "type": "reading",
+        "value": 140.0,
+        "unit": "jin",
+        "decimals": 1,
+        "stable": true
+      }
+    },
+    {
+      "name": "weight_scale_st_lb_154_3",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "02 00 06 07 14",
+      "frame_hex": "a7 00 56 05 02 00 06 07 14 7e 7a",
+      "expected": {
+        "type": "reading",
+        "value": 154.3,
+        "unit": "st:lb",
+        "decimals": 1,
+        "stable": true
+      }
+    },
+    {
+      "name": "weight_scale_lb_154_3",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "02 00 06 07 16",
+      "frame_hex": "a7 00 56 05 02 00 06 07 16 80 7a",
+      "expected": {
+        "type": "reading",
+        "value": 154.3,
+        "unit": "lb",
+        "decimals": 1,
+        "stable": true
+      }
+    },
+    {
+      "name": "weight_scale_unknown_unit_2",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "02 00 1b 58 02",
+      "frame_hex": "a7 00 56 05 02 00 1b 58 02 d2 7a",
+      "expected": {
+        "type": "error"
+      }
+    },
+    {
+      "name": "eight_scale_weight_70_00_kg",
+      "kind": "a7",
+      "cid": 50,
+      "payload_hex": "01 01 00 1b 58 20",
+      "frame_hex": "a7 00 32 06 01 01 00 1b 58 20 cd 7a",
+      "expected": {
+        "type": "reading",
+        "value": 70.0,
+        "unit": "kg",
+        "decimals": 2,
+        "stable": false
+      }
+    },
+    {
+      "name": "eight_scale_complete",
+      "kind": "a7",
+      "cid": 50,
+      "payload_hex": "0f",
+      "frame_hex": "a7 00 32 01 0f 42 7a",
+      "expected": {
+        "type": "completion",
+        "requires_stable": false
+      }
+    },
+    {
+      "name": "eight_scale_bodycomp_1",
+      "kind": "a7",
+      "cid": 50,
+      "payload_hex": "09 01 00 e1 00 c8 01 90 00 0c 00 0d",
+      "frame_hex": "a7 00 32 0c 09 01 00 e1 00 c8 01 90 00 0c 00 0d 9b 7a",
+      "expected": {
+        "type": "body",
+        "metrics": {
+          "bmi": 22.5,
+          "bodyFatPercent": 20.0,
+          "musclePercent": 40.0,
+          "fatMassLeftArmKg": 1.2,
+          "fatMassRightArmKg": 1.3
+        }
+      }
+    },
+    {
+      "name": "dual_mcu_bodycomp_5",
+      "kind": "a7",
+      "cid": 104,
+      "payload_hex": "09 05 00 64 01 2c 00 00 00 00 00 78 01 90 02 58",
+      "frame_hex": "a7 00 68 10 09 05 00 64 01 2c 00 00 00 00 00 78 01 90 02 58 7a 7a",
+      "expected": {
+        "type": "body",
+        "metrics": {
+          "fatMassKg": 10.0,
+          "waterKg": 30.0,
+          "proteinMassKg": 12.0,
+          "muscleMassKg": 40.0,
+          "weightWithoutKg": 60.0
+        }
+      }
+    },
+    {
+      "name": "a6_get_version_probe",
+      "kind": "a6",
+      "payload_hex": "0e",
+      "frame_hex": "a6 01 0e 0f 6a",
+      "expected": {
+        "type": "info"
+      }
+    },
+    {
+      "name": "corrupt_checksum",
+      "kind": "a7",
+      "cid": 86,
+      "payload_hex": "02 00 1b 58 02",
+      "frame_hex": "a7 00 56 05 02 00 1b 58 20 f1 7a",
+      "expected": {
+        "type": "error"
+      }
+    }
+  ]
+}
